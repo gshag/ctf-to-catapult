@@ -8,6 +8,7 @@ def event_to_catapult(msg):
   # Record the timestamp
   out['ts'] = "{}.{:03d}".format(msg.default_clock_snapshot.ns_from_origin // 1000, msg.default_clock_snapshot.ns_from_origin % 1000)
   out['pid'] = int(ev.packet.context_field.get('pid'))
+  out['tid'] = int(ev.specific_context_field.get('tid'))
   # Entry GC event
   if ev.id == 0:
     out['ph'] = 'B'
@@ -35,7 +36,7 @@ def event_to_catapult(msg):
   if ev.id > 4:
   	out['name'] = ev.name
   	# Begin user event
-  	if ev['span_type'] == 0:
+  	if int(ev['span_type']) == 31:
   		out['ph'] = 'B'
   	# End user event
   	else:
